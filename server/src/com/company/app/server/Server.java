@@ -2,8 +2,13 @@ package com.company.app.server;
 
 import com.company.app.network.*;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
 import java.io.*;
 import java.net.ServerSocket;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.ArrayList;
 import java.util.Objects;
 
@@ -50,6 +55,12 @@ public class Server implements ConnectionListener {
     public synchronized void onConnect(Connection connection) {
         System.out.println("Клиент подключился!");
         arrayList.add(connection);
+        /*try {
+            connection.sendKey(parser.convertToString(new KeyRequest(connection.getConnectionPublicKey())));
+        } catch (IOException e) {
+            System.out.println("Не удалось отправить публичный ключ");
+            e.printStackTrace();
+        }*/
     }
 
     @Override
@@ -79,6 +90,14 @@ public class Server implements ConnectionListener {
                         System.out.println("Клиент не вошёл");
                         connection.sendRequest(parser.convertToString(loginRequest));
                     }
+                } catch (IOException | BadPaddingException | InvalidKeyException | IllegalBlockSizeException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case "KeyRequest":
+                try {
+                    KeyRequest keyRequest = (KeyRequest) parser.convertToRequest(message);
+                    connection.setKey(keyRequest.getPublicKey());
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -93,7 +112,7 @@ public class Server implements ConnectionListener {
                         registerRequest.setLogin("false");
                     }
                     connection.sendRequest(parser.convertToString(registerRequest));
-                } catch (IOException e) {
+                } catch (IOException | BadPaddingException | InvalidKeyException | IllegalBlockSizeException e) {
                     e.printStackTrace();
                 }
                 break;
@@ -109,13 +128,13 @@ public class Server implements ConnectionListener {
                     try {
                         if (!con.getLogin().equals(""))
                             con.sendRequest(message);
-                    } catch (IOException e) {
+                    } catch (IOException | BadPaddingException | InvalidKeyException | IllegalBlockSizeException e) {
                         e.printStackTrace();
                     }
                 }
                 break;
             default:
-
+                System.out.println("Пришёл неопознанный запрос");
                 break;
         }
     }
@@ -140,7 +159,7 @@ public class Server implements ConnectionListener {
             for(Connection con : arrayList) {
                 con.sendRequest(parser.convertToString(new MessageRequest("Server",message)));
             }
-        } catch (IOException e) {
+        } catch (IOException | BadPaddingException | InvalidKeyException | IllegalBlockSizeException e) {
             e.printStackTrace();
         }
     }
@@ -181,7 +200,7 @@ public class Server implements ConnectionListener {
                 for(MessageRequest messageRequest : messages) {
                     try {
                         connection.sendRequest(parser.convertToString(messageRequest));
-                    } catch (IOException e) {
+                    } catch (IOException | BadPaddingException | InvalidKeyException | IllegalBlockSizeException e) {
                         System.out.println("Не баг а фича");
                     }
                 }
