@@ -100,6 +100,7 @@ public class LoginMenuController {
                 stage.initOwner(this.loginButton.getScene().getWindow());
                 stage.initModality(Modality.APPLICATION_MODAL);
                 stage.setOnCloseRequest(windowEvent -> {
+                    //eventController.closeConnection();
                     System.exit(1);
                 });
                 stage.setTitle("Registration");

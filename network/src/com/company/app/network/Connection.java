@@ -74,8 +74,7 @@ public class Connection {
     }
 
     public void setKey() throws IOException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException {
-        String str = in.readLine();
-        byte[] decodedBytes = cryptoManager.convertToByteCode(str);
+        byte[] decodedBytes = cryptoManager.convertToByteCode(in.readLine());
         cryptoManager.setKey(new SecretKeySpec(decodedBytes, 0, decodedBytes.length, "AES"));
     }
 
@@ -95,8 +94,7 @@ public class Connection {
 
 
     public synchronized void sendRequest(String request) throws IOException, BadPaddingException, IllegalBlockSizeException {
-        String str = cryptoManager.convertToString(cryptoManager.encryptString(request));
-        out.write(str + "\n");
+        out.write(cryptoManager.convertToString(cryptoManager.encryptString(request)) + "\n");
         out.flush();
     }
 

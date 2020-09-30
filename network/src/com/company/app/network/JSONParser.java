@@ -14,21 +14,19 @@ public class JSONParser {
 
     public synchronized Request convertToRequest(String str) throws IOException {
         Request request = null;
+        final String substring = str.substring(str.indexOf("//") + 2);
         switch (str.substring(0, str.indexOf("//"))){
             case "MessageRequest":
-                request = mapper.readValue(str.substring(str.indexOf("//")+2), MessageRequest.class);
+                request = mapper.readValue(substring, MessageRequest.class);
                 break;
             case "LoginRequest":
-                request = mapper.readValue(str.substring(str.indexOf("//")+2), LoginRequest.class);
-                break;
-            case "KeyRequest":
-                request = mapper.readValue(str.substring(str.indexOf("//")+2), KeyRequest.class);
+                request = mapper.readValue(substring, LoginRequest.class);
                 break;
             case "RegisterRequest":
-                request = mapper.readValue(str.substring(str.indexOf("//")+2), RegisterRequest.class);
+                request = mapper.readValue(substring, RegisterRequest.class);
                 break;
             case "ChangesRequest":
-                request = mapper.readValue(str.substring(str.indexOf("//")+2), ChangesRequest.class);
+                request = mapper.readValue(substring, ChangesRequest.class);
                 break;
             default:
                 break;

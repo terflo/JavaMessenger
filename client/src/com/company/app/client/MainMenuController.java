@@ -3,10 +3,13 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import com.company.app.network.MessageRequest;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 
 public class MainMenuController {
 
@@ -51,7 +54,20 @@ public class MainMenuController {
             assert profileButton != null : "fx:id=\"profileButton\" was not injected: check your FXML file 'MainMenu.fxml'.";
             assert sendButton != null : "fx:id=\"sendButton\" was not injected: check your FXML file 'MainMenu.fxml'.";
 
+            this.messageField.setOnKeyPressed(new EventHandler<KeyEvent>() {
+                @Override
+                public void handle(KeyEvent keyEvent) {
+                    if (keyEvent.getCode() == KeyCode.ENTER) {
+                        if (!MainMenuController.this.messageField.getText().trim().equals("")) {
+                            MainMenuController.this.eventController.sendRequest(new MessageRequest(MainMenuController.this.eventController.getConnectionLogin(), MainMenuController.this.messageField.getText()));
+                            MainMenuController.this.messageField.setText("");
+                        }
+                    }
+                }
+            });
+
             this.exitButton.setOnAction(actionEvent -> {
+                //eventController.closeConnection();
                 System.exit(1);
             });
 

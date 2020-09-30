@@ -140,7 +140,6 @@ public class Server implements ConnectionListener {
     @Override
     public synchronized void onException(Connection connection, Exception e) {
         System.out.println("Ошибка " + e);
-        e.printStackTrace();
     }
 
     public synchronized void sendAll(String message) {

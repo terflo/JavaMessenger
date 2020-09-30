@@ -130,16 +130,13 @@ public class EventController implements ConnectionListener {
 
     @Override
     public void onException(Connection connection, Exception e) {
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Error");
-                alert.setHeaderText("An unexpected error occurred");
-                alert.setContentText(e.toString());
-                alert.setResizable(false);
-                alert.show();
-            }
+        Platform.runLater(() -> {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Error");
+            alert.setHeaderText("An unexpected error occurred");
+            alert.setContentText(e.toString());
+            alert.setResizable(false);
+            alert.show();
         });
     }
 

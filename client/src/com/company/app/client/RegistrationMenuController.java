@@ -59,6 +59,8 @@ public class RegistrationMenuController {
         this.notUniqueLogin.setVisible(false);
         this.fillAllFieldsLabel.setVisible(false);
 
+
+
         joinButton.setOnAction(actionEvent -> {
             if (!passwordField.getText().equals("") && !loginField.getText().equals("") && !emailField.getText().equals("") && !passwordConfirmField.getText().equals("")) {
                 if (passwordField.getText().trim().equals(passwordConfirmField.getText().trim())) {
