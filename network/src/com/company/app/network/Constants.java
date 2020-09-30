@@ -11,7 +11,7 @@ public class Constants {
     public final static String DB_NAME = "users";
     public final static String JDBC_IP = "127.0.0.1";
     public final static String JDBC_PORT = "3306";
-    public final static String IP = "192.168.43.32";
+    public final static String IP = "localhost";
     public final static int PORT = 25565;
 
 }

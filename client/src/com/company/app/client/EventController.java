@@ -10,7 +10,6 @@ import javax.crypto.NoSuchPaddingException;
 import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.util.Objects;
 
 public class EventController implements ConnectionListener {
@@ -69,7 +68,7 @@ public class EventController implements ConnectionListener {
             if (connection != null) {
                 connection.sendRequest(parser.convertToString(request));
             }
-        } catch (IOException | BadPaddingException | InvalidKeyException | IllegalBlockSizeException e) {
+        } catch (IOException | BadPaddingException | IllegalBlockSizeException e) {
             e.printStackTrace();
         }
     }
@@ -78,12 +77,11 @@ public class EventController implements ConnectionListener {
     public void onConnect(Connection connection) {
         if (loginController != null)
             loginController.greenConnectStatus();
-        /*try {
-            connection.sendKey(parser.convertToString(new KeyRequest(connection.getConnectionPublicKey())));
-        } catch (IOException e) {
-            System.out.println("Не удалось отправить публичный ключ");
-            e.printStackTrace();
-        }*/
+        try {
+            connection.setKey();
+        } catch (IOException | NoSuchPaddingException | NoSuchAlgorithmException | InvalidKeyException e) {
+            onException(connection, e);
+        }
     }
 
     @Override
@@ -104,14 +102,6 @@ public class EventController implements ConnectionListener {
             LoginRequest loginRequest = (LoginRequest) request;
             try {
                 loginController.loginSuccessful((loginRequest.getLogin().equals("true") && loginRequest.getPassword().equals(lastLoginRequest.getPassword())));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            break;
-        case "KeyRequest":
-            try {
-                KeyRequest keyRequest = (KeyRequest) parser.convertToRequest(message);
-                connection.setKey(keyRequest.getPublicKey());
             } catch (IOException e) {
                 e.printStackTrace();
             }
